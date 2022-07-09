@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class AutfKontroler extends Controller
 {
@@ -32,11 +34,37 @@ class AutfKontroler extends Controller
 
             $user->createToken($user->username . 'token')->plainTextToken;
 
-            return response()->json(
-                [
-                    'Info' => 'User successfully registered!'
-                ]
-            );
+            return response()->json([
+                'Info' => 'User successfully registered!'
+            ]);
         }
+    }
+
+
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Greška!', $validator->errors()]);
+        }
+
+        if (!Auth::attempt($request->only('username', 'password'))) {
+            return response()->json(['Info' => 'Pokušajte ponovo!']);
+        }
+
+        $user = User::where('username', $request['username'])->firstOrFail();
+
+        $token = $user->createToken($user->username . 'login_token')->plainTextToken;
+
+        return response()->json([
+            'Info' => 'User successfully logged in!',
+            'User' => $user,
+            'Token' => $token
+        ]);
     }
 }
