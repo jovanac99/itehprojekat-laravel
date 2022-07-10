@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 class SatKontroler extends Controller
 {
 
+    public function vratiSatove()
+    {
+        $sviSatovi = Sat::all();
+        return response()->json(['sviSatovi' => $sviSatovi]);
+    }
+
+
     public function dodajSat(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -23,7 +30,7 @@ class SatKontroler extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Info' => $validator->errors()]);
+            return response()->json(['Info' => 'Please fill in all the fields!']);
         }
 
         $noviSat = new Sat();
@@ -48,7 +55,19 @@ class SatKontroler extends Controller
         $noviSat->save();
 
         return response()->json([
-            'Info' => 'The watch is successfully added!'
+            'Info' => 'The watch has been added successfully!'
         ]);
+    }
+
+
+    public function deleteSat($ID)
+    {
+        $deleteSat = Sat::find($ID);
+
+        if ($deleteSat) {
+            $deleteSat->delete();
+
+            return response()->json(['Info' => 'The watch has been deleted successfully!']);
+        }
     }
 }
