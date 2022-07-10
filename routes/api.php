@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AutfKontroler;
+use App\Http\Controllers\SatKontroler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AutfKontroler::class, 'register']);
 Route::post('login', [AutfKontroler::class, 'login']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('novi-sat', [SatKontroler::class, 'dodajSat']);
 });

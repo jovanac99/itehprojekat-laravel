@@ -50,7 +50,7 @@ class AutfKontroler extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Greška!', $validator->errors()]);
+            return response()->json(['Info' => 'Unesite username i password!']);
         }
 
         if (!Auth::attempt($request->only('username', 'password'))) {
