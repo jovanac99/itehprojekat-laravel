@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 
 class SatKontroler extends Controller
@@ -68,6 +69,67 @@ class SatKontroler extends Controller
             $deleteSat->delete();
 
             return response()->json(['Info' => 'The watch has been deleted successfully!']);
+        }
+    }
+
+
+    public function editSat($ID)
+    {
+        $editSat = Sat::find($ID);
+
+        if ($editSat) {
+            return response()->json(['editSat' => $editSat]);
+        }
+    }
+
+
+    public function saveSat(Request $request, $ID)
+    {
+        $validator = Validator::make($request->all(), [
+            'brend' => 'required|string',
+            'model' => 'required|string',
+            'cena' =>  'required',
+            'pol' => 'required|string',
+            'narukvica' => 'required|string',
+            'mehanizam' => 'required|string',
+            'garancija' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Info' => $validator->errors()]);
+        } else {
+            $sat = Sat::find($ID);
+
+            if ($sat) {
+
+                $sat->brend = $request->input('brend');
+                $sat->model = $request->input('model');
+                $sat->cena = $request->input('cena');
+                $sat->pol = $request->input('pol');
+                $sat->narukvica = $request->input('narukvica');
+                $sat->mehanizam = $request->input('mehanizam');
+                $sat->garancija = $request->input('garancija');
+
+                if ($request->hasFile('slika')) {
+                    $path = $sat->slika;
+
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
+
+                    $file = $request->file('slika');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = $sat->brend . $sat->model . '.' . $extension;
+                    $file->move('slike/', $filename);
+                    $sat->slika = 'slike/' . $filename;
+                }
+
+                $sat->update();
+
+                return response()->json([
+                    'Info' => 'The watch has been updated successfully!'
+                ]);
+            }
         }
     }
 }

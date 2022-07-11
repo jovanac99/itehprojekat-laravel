@@ -67,4 +67,13 @@ class AutfKontroler extends Controller
             'Token' => $token
         ]);
     }
+
+
+
+
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+        return response()->json(['Info' => 'You have successfully been logged out!']);
+    }
 }

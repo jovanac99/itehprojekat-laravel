@@ -23,4 +23,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('novi-sat', [SatKontroler::class, 'dodajSat']);
     Route::get('vrati-satove', [SatKontroler::class, 'vratiSatove']);
     Route::delete('delete-sat/{id}', [SatKontroler::class, 'deleteSat']);
+    Route::get('edit-sat/{id}', [SatKontroler::class, 'editSat']);
+    Route::post('save-sat/{id}', [SatKontroler::class, 'saveSat']);
+    Route::post('logout', [AutfKontroler::class, 'logout']);
 });
