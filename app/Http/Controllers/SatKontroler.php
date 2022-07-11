@@ -6,6 +6,7 @@ use App\Models\Sat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 
 class SatKontroler extends Controller
@@ -131,5 +132,18 @@ class SatKontroler extends Controller
                 ]);
             }
         }
+    }
+
+
+    public function searchSat(Request $request)
+    {
+        $satovi = DB::table('sats')
+            ->where('brend', 'like', "%$request->search%")
+            ->orWhere('model', 'like', "%$request->search%")
+            ->orWhere('pol', 'like', "%$request->search%")
+            ->orWhere('narukvica', 'like', "%$request->search%")
+            ->orWhere('mehanizam', 'like', "%$request->search%")->get();
+
+        return response()->json(['satovi' => $satovi]);
     }
 }
