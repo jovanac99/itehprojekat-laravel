@@ -27,4 +27,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('save-sat/{id}', [SatKontroler::class, 'saveSat']);
     Route::post('logout', [AutfKontroler::class, 'logout']);
     Route::post('search-sat', [SatKontroler::class, 'searchSat']);
+    Route::post('sort-sat', [SatKontroler::class, 'sortSat']);
 });

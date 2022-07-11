@@ -146,4 +146,14 @@ class SatKontroler extends Controller
 
         return response()->json(['satovi' => $satovi]);
     }
+
+
+    public function sortSat(Request $request)
+    {
+        $satovi = DB::table('sats')
+            ->orderBy($request->kolona, $request->sort)
+            ->get();
+
+        return response()->json(['satovi' => $satovi]);
+    }
 }
